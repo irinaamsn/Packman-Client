@@ -4,7 +4,7 @@ import org.packman.client.enums.MoveKeys;
 
 public interface DrawService {
     void drawStartGame(String username);
-    void drawUpdateWindow();//todo нужен ли он сереже ?????
+    void drawUpdateWindow();
     void drawMoveKeys(MoveKeys move);
     public void drawForceGame();
     void drawMenu();

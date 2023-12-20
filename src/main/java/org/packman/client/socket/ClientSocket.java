@@ -1,26 +1,27 @@
 package org.packman.client.socket;
 
-import lombok.RequiredArgsConstructor;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.InetAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
-@RequiredArgsConstructor
+import static org.packman.client.utils.PropertiesUtil.getIP;
+import static org.packman.client.utils.PropertiesUtil.getPort;
+
 public class ClientSocket implements ClientCommand {
-    private static String SERVER_ADDRESS;
-    static {
+    private static int PORT = getPort();//2020
+    private static String SERVER_ADDRESS = getIP();
+
+   /* static {
         try {
-            SERVER_ADDRESS = InetAddress.getLocalHost().getHostAddress();//todo
+            PORT = properties.getPort();
+            SERVER_ADDRESS = InetAddress.getLocalHost().getHostAddress();
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
-    }
-    private static final int PORT = 2020;//todo
+    }*/
+
     private static PrintWriter out;
     private static BufferedReader in;
 
@@ -28,7 +29,8 @@ public class ClientSocket implements ClientCommand {
         try (Socket socket = new Socket(SERVER_ADDRESS, PORT)) {
             out = new PrintWriter(socket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            while (true) {}
+            while (true) {
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

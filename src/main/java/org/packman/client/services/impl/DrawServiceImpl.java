@@ -18,13 +18,17 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import static org.packman.client.utils.ParseUtil.*;
+import static org.packman.client.utils.PropertiesUtil.getPeriod;
+import static org.packman.client.utils.PropertiesUtil.getTimeGame;
 
 @RequiredArgsConstructor
 public class DrawServiceImpl implements DrawService {
     private static String USERNAME;
-    private final int PERIOD_GAME = 1;//todo
-    private final int TIME_GAME = 100;//todo
+    private final int PERIOD_GAME = getPeriod();//1
+    private final int TIME_GAME = getTimeGame();//100
+
     private final WindowDraw draw;
+
     private final ClientCommand clientCommand;
     private static ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
@@ -65,7 +69,8 @@ public class DrawServiceImpl implements DrawService {
             draw.updateGame(map, timeLeft, currentPoints);
         } else if (parseResponse[0].equals(UpdateMapAnswer.FINISH_GAME.name()))
             drawFinishGame(Integer.valueOf(parseResponse[1]), Integer.valueOf(parseResponse[2]));
-        else drawMenu();;
+        else drawMenu();
+        ;
     }
 
     @Override
@@ -88,7 +93,7 @@ public class DrawServiceImpl implements DrawService {
         String responsePlayers = clientCommand.sendCommand(Command.GET_BEST_PLAYERS.name());
         String[] parseResponsePlayers = parseStrToArray(responsePlayers);
         List<AppUser> appUsers = toListBestPlayers(parseResponsePlayers[1]);
-        draw.drawFinish(USERNAME, appUsers, currentPoints, currentPosition);
+        draw.drawForce(USERNAME, appUsers, currentPoints, currentPosition);
         scheduler.shutdown();
     }
 
