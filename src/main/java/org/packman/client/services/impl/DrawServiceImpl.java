@@ -101,8 +101,14 @@ public class DrawServiceImpl extends KeyAdapter implements DrawService {
         draw.drawMenu(appUsers, this::drawStartGame);
     }
 
+    static Long lastKeyPressed = 0L;
+    static Long MIN_TIME_KEY_PRESSED_PRESSED_SUPPORTED = 100L;
+
     @Override
     public void keyPressed(KeyEvent e) {
+        Long currentTime = System.currentTimeMillis();
+        if (currentTime - lastKeyPressed < MIN_TIME_KEY_PRESSED_PRESSED_SUPPORTED) return;
+        lastKeyPressed = currentTime;
         switch (e.getKeyCode()) {
             case KeyEvent.VK_UP -> {
                 drawMoveKeys(MoveKeys.MOVE_UP);
