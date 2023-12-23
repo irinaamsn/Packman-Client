@@ -38,7 +38,7 @@ public class DrawServiceImpl implements DrawService {
         String response = clientCommand.sendCommand(Command.START.name(), username);
         String[] parseResponse = parseStrToArray(response);
         List<int[]> map = toMap(parseResponse[1]);
-        Timestamp timeLeft = Timestamp.valueOf(parseResponse[2]);
+        int timeLeft = Integer.valueOf(parseResponse[2]);
         draw.updateGame(map, timeLeft, 0);
         long startTime = System.currentTimeMillis();
         scheduler.scheduleAtFixedRate(() -> {
@@ -64,7 +64,7 @@ public class DrawServiceImpl implements DrawService {
             draw.updateLifeTime(Integer.valueOf(parseResponse[1]));//time
         else if (parseResponse[0].equals(UpdateMapAnswer.MAP.name())) {
             List<int[]> map = toMap(parseResponse[1]);
-            Timestamp timeLeft = Timestamp.valueOf(parseResponse[2]);
+            int timeLeft = Integer.valueOf(parseResponse[2]);
             int currentPoints = Integer.valueOf(parseResponse[3]);
             draw.updateGame(map, timeLeft, currentPoints);
         } else if (parseResponse[0].equals(UpdateMapAnswer.FINISH_GAME.name()))
@@ -81,7 +81,7 @@ public class DrawServiceImpl implements DrawService {
             draw.updateLifeTime(Integer.valueOf(parseResponse[1]));
         else if (parseResponse[0].equals(MoveAnswer.MAP.name())) {
             List<int[]> map = toMap(parseResponse[1]);
-            Timestamp timeLeft = Timestamp.valueOf(parseResponse[2]);
+            int timeLeft = Integer.valueOf(parseResponse[2]);
             int currentPoints = Integer.valueOf(parseResponse[3]);
             draw.updateGame(map, timeLeft, currentPoints);
         } else if (parseResponse[0].equals(MoveAnswer.FINISH_GAME.name()))
@@ -93,7 +93,7 @@ public class DrawServiceImpl implements DrawService {
         String responsePlayers = clientCommand.sendCommand(Command.GET_BEST_PLAYERS.name());
         String[] parseResponsePlayers = parseStrToArray(responsePlayers);
         List<AppUser> appUsers = toListBestPlayers(parseResponsePlayers[1]);
-        draw.drawForce(USERNAME, appUsers, currentPoints, currentPosition);
+        draw.drawFinish(USERNAME, appUsers, currentPoints, currentPosition);
         scheduler.shutdown();
     }
 

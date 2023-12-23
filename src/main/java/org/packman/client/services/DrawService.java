@@ -6,6 +6,6 @@ public interface DrawService {
     void drawStartGame(String username);
     void drawUpdateWindow();
     void drawMoveKeys(MoveKeys move);
-    public void drawForceGame();
+    void drawForceGame();
     void drawMenu();
 }

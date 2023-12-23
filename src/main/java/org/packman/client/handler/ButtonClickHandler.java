@@ -1,5 +1,6 @@
 package org.packman.client.handler;
 
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.packman.client.services.DrawService;
 
@@ -7,16 +8,15 @@ import org.packman.client.services.DrawService;
 public class ButtonClickHandler {
     private final DrawService drawService;
 
-    //
-    void clickStart() {
-        drawService.drawStartGame(" ");
+    public void clickStart(String username) {
+        drawService.drawStartGame(username);
     }
 
-    void clickMenu() {
+    public void clickMenu() {
         drawService.drawMenu();
     }
 
-    void clickForce() {
+    public void clickForce() {
         drawService.drawForceGame();
     }
 }
