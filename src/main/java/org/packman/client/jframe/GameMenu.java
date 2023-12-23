@@ -1,23 +1,21 @@
 package org.packman.client.jframe;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.packman.client.handler.ButtonClickHandler;
 import org.packman.client.models.AppUser;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 @RequiredArgsConstructor
 public class GameMenu extends JFrame {
-    private final JButton startButton;
-    private final JTextField usernameField;
-    private final JTextArea leaderboardArea;
+    private JButton startButton;
+    private JTextField usernameField;
+    private JTextArea leaderboardArea;
 
-    //private final ButtonClickHandler handler;
-
-    public GameMenu(List<AppUser> bestPlayers) {
+    public void draw(List<AppUser> bestPlayers, Consumer<String> funk) {
         setTitle("МЕНЮ");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(500, 300);
@@ -50,7 +48,7 @@ public class GameMenu extends JFrame {
         // Установка обработчика событий для кнопки "Старт"
         startButton.addActionListener(e -> {
             String username = usernameField.getText();
-            //handler.clickStart(username);
+            funk.accept(username);
         });
 
         // Обновление топа лучших игроков
@@ -67,17 +65,5 @@ public class GameMenu extends JFrame {
         leaderboardArea.setText(leaderboardText.toString());
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            // Пример использования
-            List<AppUser> bestPlayers = List.of(
-                    new AppUser("Player1", 100),
-                    new AppUser("Player2", 90),
-                    new AppUser("Player3", 80)
-            );
-
-            new GameMenu(bestPlayers);
-        });
-    }
 }
 

@@ -1,17 +1,22 @@
 package org.packman.client.jframe;
 
+import lombok.RequiredArgsConstructor;
+import org.packman.client.services.impl.DrawServiceImpl;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+
+@RequiredArgsConstructor
 public class GamePage extends JFrame {
     private JLabel timeLabel;
     private JLabel pointsLabel;
     private JPanel mapPanel;
 
-    public GamePage(List<int[]> map, int timeLife, int currentPoints) {
+    public void draw(List<int[]> map, int timeLife, int currentPoints, DrawServiceImpl drawService) {
         setTitle("Игровая страница");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(600, 600);
+        setSize(1500, 1000);
         setLocationRelativeTo(null);
 
         // Верхняя панель с временем и очками
@@ -34,6 +39,11 @@ public class GamePage extends JFrame {
         updatePointsLabel(currentPoints);
 
         setVisible(true);
+
+        addKeyListener(drawService);
+        setFocusable(true);
+        setFocusTraversalKeysEnabled(false);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     public void updateTimeLabel(int timeLife) {
@@ -48,33 +58,6 @@ public class GamePage extends JFrame {
         ((MapPanel) mapPanel).updateMap(map);
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            // Пример использования
-            List<int[]> map = List.of(
-                    new int[]{2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
-                    new int[]{2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2},
-                    new int[]{2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2},
-                    new int[]{2, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 2},
-                    new int[]{2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2},
-                    new int[]{2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2},
-                    new int[]{2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2},
-                    new int[]{2, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2},
-                    new int[]{2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2},
-                    new int[]{2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2},
-                    new int[]{2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 2},
-                    new int[]{2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2},
-                    new int[]{2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2},
-                    new int[]{2, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2},
-                    new int[]{2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2}
-                    );
-
-            int timeLife = 59;
-            int currentPoints = 100;
-
-            new GamePage(map, timeLife, currentPoints);
-        });
-    }
 }
 
 class MapPanel extends JPanel {

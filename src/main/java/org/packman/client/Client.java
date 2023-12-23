@@ -1,6 +1,5 @@
 package org.packman.client;
 
-
 import static org.packman.client.socket.ClientSocket.connection;
 
 public class Client {

@@ -1,11 +1,14 @@
 package org.packman.client.jframe;
 
+import lombok.RequiredArgsConstructor;
+import org.packman.client.models.AppUser;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
-
+@RequiredArgsConstructor
 public class GameResultsPage extends JFrame {
     private JLabel usernameLabel;
     private JLabel pointsLabel;
@@ -13,8 +16,7 @@ public class GameResultsPage extends JFrame {
     private JList<AppUser> bestPlayersList;
     private JButton playAgainButton;
     private JButton menuButton;
-
-    public GameResultsPage(String username, List<AppUser> bestPlayers, int currentPoints, int currentPosition) {
+    public void draw(String username, List<AppUser> bestPlayers, int currentPoints, int currentPosition) {
         setTitle("Результаты игры");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(600, 350);
@@ -52,27 +54,22 @@ public class GameResultsPage extends JFrame {
         playAgainButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Действия при нажатии на кнопку "Играть снова"
-                // Например, открытие новой игровой страницы
-                dispose(); // Закрываем текущую страницу
-                // Ваш код для начала новой игры
+               // handler.clickStart(username);
+                dispose();
             }
         });
 
         menuButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Действия при нажатии на кнопку "Меню"
-                // Например, возвращение на главное меню
-                dispose(); // Закрываем текущую страницу
-                // Ваш код для перехода в главное меню
+              //  handler.clickMenu();
+                dispose();
             }
         });
 
         // Обновление отображения результатов текущего игрока и списка лучших игроков
         updateResults(username, currentPoints, currentPosition);
         updateBestPlayersList(bestPlayers);
-
         setVisible(true);
     }
 
@@ -85,33 +82,6 @@ public class GameResultsPage extends JFrame {
     public void updateBestPlayersList(List<AppUser> bestPlayers) {
         bestPlayersList.setListData(bestPlayers.toArray(new AppUser[0]));
     }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            // Пример использования
-            List<AppUser> bestPlayers = List.of(
-                    new AppUser("Player1", 100),
-                    new AppUser("Player2", 90),
-                    new AppUser("Player3", 80)
-            );
-
-            new GameResultsPage("CurrentPlayer", bestPlayers, 120, 1);
-        });
-    }
 }
 
-class AppUser {
-    private String username;
-    private int countPoints;
-
-    public AppUser(String username, int countPoints) {
-        this.username = username;
-        this.countPoints = countPoints;
-    }
-
-    @Override
-    public String toString() {
-        return username + ": " + countPoints;
-    }
-}
 

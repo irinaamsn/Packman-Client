@@ -22,6 +22,16 @@ public class PropertiesUtil {
     private static void loadConfig() {
         try (InputStream input = PropertiesUtil.class.getClassLoader().getResourceAsStream(CONFIG_FILE)) {
             properties.load(input);
+            for (String key : properties.stringPropertyNames()) {
+                String value = properties.getProperty(key);
+                if (value != null && value.startsWith("${") && value.endsWith("}")) {
+                    String envVar = value.substring(2, value.length() - 1);
+                    String envVarValue = System.getenv(envVar);
+                    if (envVarValue != null) {
+                        properties.setProperty(key, envVarValue);
+                    }
+                }
+            }
         } catch (IOException ex) {
             ex.printStackTrace();
         }

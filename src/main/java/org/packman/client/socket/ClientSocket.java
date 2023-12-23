@@ -1,18 +1,29 @@
 package org.packman.client.socket;
 
+import lombok.RequiredArgsConstructor;
+import org.packman.client.draw.WindowDraw;
+import org.packman.client.jframe.GameMenu;
+import org.packman.client.jframe.GamePage;
+import org.packman.client.jframe.GameResultsPage;
+import org.packman.client.services.DrawService;
+import org.packman.client.services.impl.DrawServiceImpl;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-import static org.packman.client.utils.PropertiesUtil.getIP;
-import static org.packman.client.utils.PropertiesUtil.getPort;
-
-public class ClientSocket implements ClientCommand {
-    private static int PORT = getPort();//2020
-    private static String SERVER_ADDRESS = getIP();
-
+@RequiredArgsConstructor
+public class ClientSocket{
+    private static int PORT = 2020;
+    private static String SERVER_ADDRESS ="10.102.161.58";
+    private static DrawService drawService = new DrawServiceImpl(
+            new WindowDraw(
+                    new GameMenu(),
+                    new GamePage(),
+                    new GameResultsPage())
+    );
    /* static {
         try {
             PORT = properties.getPort();
@@ -29,6 +40,7 @@ public class ClientSocket implements ClientCommand {
         try (Socket socket = new Socket(SERVER_ADDRESS, PORT)) {
             out = new PrintWriter(socket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            drawService.drawMenu();
             while (true) {
             }
         } catch (IOException e) {
@@ -36,8 +48,7 @@ public class ClientSocket implements ClientCommand {
         }
     }
 
-    @Override
-    public String sendCommand(String command, String username) {
+    public static String sendCommand(String command, String username) {
         out.println(command + " " + username);
         try {
             return in.readLine();
@@ -46,8 +57,7 @@ public class ClientSocket implements ClientCommand {
         }
     }
 
-    @Override
-    public String sendCommand(String command) {
+    public static String sendCommand(String command) {
         out.println(command);
         try {
             return in.readLine();
