@@ -2,9 +2,9 @@ package org.packman.client.socket;
 
 import lombok.RequiredArgsConstructor;
 import org.packman.client.draw.WindowDraw;
-import org.packman.client.jframe.GameMenu;
-import org.packman.client.jframe.GamePage;
-import org.packman.client.jframe.GameResultsPage;
+import org.packman.client.pages.GameMenu;
+import org.packman.client.pages.GamePage;
+import org.packman.client.pages.GameResultsPage;
 import org.packman.client.services.DrawService;
 import org.packman.client.services.impl.DrawServiceImpl;
 

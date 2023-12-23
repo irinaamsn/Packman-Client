@@ -1,4 +1,4 @@
-package org.packman.client.jframe;
+package org.packman.client.pages;
 
 import lombok.RequiredArgsConstructor;
 import org.packman.client.models.AppUser;
@@ -8,6 +8,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.function.Consumer;
+
 @RequiredArgsConstructor
 public class GameResultsPage extends JFrame {
     private JLabel usernameLabel;
@@ -16,7 +18,8 @@ public class GameResultsPage extends JFrame {
     private JList<AppUser> bestPlayersList;
     private JButton playAgainButton;
     private JButton menuButton;
-    public void draw(String username, List<AppUser> bestPlayers, int currentPoints, int currentPosition) {
+    public void draw(String username, List<AppUser> bestPlayers, int currentPoints, int currentPosition,
+                     Consumer<String> onClickStartGame, Runnable onClickStartMenu) {
         setTitle("Результаты игры");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(600, 350);
@@ -54,7 +57,7 @@ public class GameResultsPage extends JFrame {
         playAgainButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-               // handler.clickStart(username);
+                onClickStartGame.accept(username);
                 dispose();
             }
         });
@@ -62,7 +65,7 @@ public class GameResultsPage extends JFrame {
         menuButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-              //  handler.clickMenu();
+                onClickStartMenu.run();
                 dispose();
             }
         });

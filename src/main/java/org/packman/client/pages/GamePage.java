@@ -1,10 +1,11 @@
-package org.packman.client.jframe;
+package org.packman.client.pages;
 
 import lombok.RequiredArgsConstructor;
 import org.packman.client.services.impl.DrawServiceImpl;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -13,18 +14,27 @@ public class GamePage extends JFrame {
     private JLabel pointsLabel;
     private JPanel mapPanel;
 
-    public void draw(List<int[]> map, int timeLife, int currentPoints, DrawServiceImpl drawService) {
+    public void draw(List<int[]> map, int timeLife, int currentPoints, DrawServiceImpl drawService,
+                     Runnable onClickForceFinishGame) {
         setTitle("Игровая страница");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1500, 1000);
         setLocationRelativeTo(null);
 
-        // Верхняя панель с временем и очками
+        // Верхняя панель с временем, очками и кнопкой
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+
         timeLabel = new JLabel("Время: " + timeLife);
         pointsLabel = new JLabel("Очки: " + currentPoints);
+
+        JButton finishButton = new JButton("Завершить игру");
+        finishButton.addActionListener((ActionEvent e) -> {
+            onClickForceFinishGame.run();
+        });
+
         topPanel.add(timeLabel);
         topPanel.add(pointsLabel);
+        topPanel.add(finishButton);
 
         // Нижняя панель с отображением карты
         mapPanel = new MapPanel(map);
@@ -57,7 +67,6 @@ public class GamePage extends JFrame {
     public void updateMap(List<int[]> map) {
         ((MapPanel) mapPanel).updateMap(map);
     }
-
 }
 
 class MapPanel extends JPanel {
@@ -106,4 +115,5 @@ class MapPanel extends JPanel {
         }
     }
 }
+
 

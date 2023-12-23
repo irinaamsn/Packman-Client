@@ -25,8 +25,8 @@ import static org.packman.client.utils.PropertiesUtil.getTimeGame;
 @RequiredArgsConstructor
 public class DrawServiceImpl extends KeyAdapter implements DrawService {
     private static String USERNAME;
-    private final int PERIOD_GAME = getPeriod();//1
-    private final int TIME_GAME = getTimeGame();//100
+    private final int PERIOD_GAME = getPeriod();
+    private final int TIME_GAME = getTimeGame();
 
     private final WindowDraw draw;
     private static ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
@@ -37,12 +37,9 @@ public class DrawServiceImpl extends KeyAdapter implements DrawService {
         String response = sendCommand(Command.START.name(), username);
         String[] parseResponse = parseStrToArray(response);
         List<int[]> map = toMap(parseResponse[1]);
-        int timeLeft = Integer.valueOf(parseResponse[2]);
-        draw.updateGame(map, timeLeft, 0, this);
-        long startTime = System.currentTimeMillis();
-        scheduler.scheduleAtFixedRate(() -> {
-            drawUpdateWindow();
-        }, 0, PERIOD_GAME, TimeUnit.SECONDS);
+        int timeLeft = Integer.parseInt(parseResponse[2]);
+        draw.updateGame(map, timeLeft, 0, this, this::onForceFinishGame);
+        scheduler.scheduleAtFixedRate(this::drawUpdateWindow, 0, PERIOD_GAME, TimeUnit.SECONDS);
     }
 
     @Override
@@ -50,14 +47,14 @@ public class DrawServiceImpl extends KeyAdapter implements DrawService {
         String response = sendCommand(Command.UPDATE_MAP.name());
         String[] parseResponse = parseStrToArray(response);
         if (parseResponse[0].equals(UpdateMapAnswer.NOT_CHANGED.name()))
-            draw.updateLifeTime(Integer.valueOf(parseResponse[1]));//time
+            draw.updateLifeTime(Integer.parseInt(parseResponse[1]));//time
         else if (parseResponse[0].equals(UpdateMapAnswer.MAP.name())) {
             List<int[]> map = toMap(parseResponse[1]);
-            int timeLeft = Integer.valueOf(parseResponse[2]);
-            int currentPoints = Integer.valueOf(parseResponse[3]);
-            draw.updateGame(map, timeLeft, currentPoints, this);
+            int timeLeft = Integer.parseInt(parseResponse[2]);
+            int currentPoints = Integer.parseInt(parseResponse[3]);
+            draw.updateGame(map, timeLeft, currentPoints, this, this::onForceFinishGame);
         } else if (parseResponse[0].equals(UpdateMapAnswer.FINISH_GAME.name()))
-            drawFinishGame(Integer.valueOf(parseResponse[1]), Integer.valueOf(parseResponse[2]));
+            drawFinishPage(Integer.parseInt(parseResponse[1]), Integer.parseInt(parseResponse[2]));
         else drawMenu();
     }
 
@@ -66,31 +63,31 @@ public class DrawServiceImpl extends KeyAdapter implements DrawService {
         String response = sendCommand(move.name());
         String[] parseResponse = parseStrToArray(response);
         if (parseResponse[0].equals(MoveAnswer.NOT_CHANGED.name()))
-            draw.updateLifeTime(Integer.valueOf(parseResponse[1]));
+            draw.updateLifeTime(Integer.parseInt(parseResponse[1]));
         else if (parseResponse[0].equals(MoveAnswer.MAP.name())) {
             List<int[]> map = toMap(parseResponse[1]);
-            int timeLeft = Integer.valueOf(parseResponse[2]);
-            int currentPoints = Integer.valueOf(parseResponse[3]);
-            draw.updateGame(map, timeLeft, currentPoints, this);
+            int timeLeft = Integer.parseInt(parseResponse[2]);
+            int currentPoints = Integer.parseInt(parseResponse[3]);
+            draw.updateGame(map, timeLeft, currentPoints, this, this::onForceFinishGame);
         } else if (parseResponse[0].equals(MoveAnswer.FINISH_GAME.name()))
-            drawFinishGame(Integer.valueOf(parseResponse[1]), Integer.valueOf(parseResponse[2]));
+            drawFinishPage(Integer.parseInt(parseResponse[1]), Integer.parseInt(parseResponse[2]));
         else drawMenu();
     }
 
-    private void drawFinishGame(int currentPoints, int currentPosition) {
+    private void drawFinishPage(int currentPoints, int currentPosition) {
         String responsePlayers = sendCommand(Command.GET_BEST_PLAYERS.name());
         String[] parseResponsePlayers = parseStrToArray(responsePlayers);
         List<AppUser> appUsers = toListBestPlayers(parseResponsePlayers[1]);
-        draw.drawFinish(USERNAME, appUsers, currentPoints, currentPosition);
+        draw.drawFinish(USERNAME, appUsers, currentPoints, currentPosition, this::drawStartGame, this::drawMenu);
         scheduler.shutdown();
     }
 
     @Override
-    public void drawForceGame() {
+    public void onForceFinishGame() {
         String response = sendCommand(Command.FORCE_FINISH.name());
         String[] parseResponse = parseStrToArray(response);
         if (parseResponse[0].equals(FinishAnswer.ERROR_GAME_NOT_EXISTS.name())) drawMenu();
-        else drawFinishGame(Integer.valueOf(parseResponse[1]), Integer.valueOf(parseResponse[2]));
+        else drawFinishPage(Integer.parseInt(parseResponse[1]), Integer.parseInt(parseResponse[2]));
     }
 
     @Override

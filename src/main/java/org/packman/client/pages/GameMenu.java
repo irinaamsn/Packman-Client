@@ -1,4 +1,4 @@
-package org.packman.client.jframe;
+package org.packman.client.pages;
 
 import lombok.RequiredArgsConstructor;
 import org.packman.client.models.AppUser;
@@ -7,7 +7,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 @RequiredArgsConstructor
 public class GameMenu extends JFrame {
@@ -15,7 +14,7 @@ public class GameMenu extends JFrame {
     private JTextField usernameField;
     private JTextArea leaderboardArea;
 
-    public void draw(List<AppUser> bestPlayers, Consumer<String> funk) {
+    public void draw(List<AppUser> bestPlayers, Consumer<String> onClickStart) {
         setTitle("МЕНЮ");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(500, 300);
@@ -48,7 +47,7 @@ public class GameMenu extends JFrame {
         // Установка обработчика событий для кнопки "Старт"
         startButton.addActionListener(e -> {
             String username = usernameField.getText();
-            funk.accept(username);
+            onClickStart.accept(username);
         });
 
         // Обновление топа лучших игроков
