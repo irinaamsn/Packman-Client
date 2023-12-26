@@ -1,6 +1,5 @@
 package org.packman.client.services.impl;
 
-import lombok.RequiredArgsConstructor;
 import org.packman.client.draw.WindowDraw;
 import org.packman.client.enums.Command;
 import org.packman.client.enums.MoveKeys;
@@ -22,13 +21,17 @@ import static org.packman.client.utils.ParseUtil.*;
 import static org.packman.client.utils.PropertiesUtil.getPeriod;
 import static org.packman.client.utils.PropertiesUtil.getTimeGame;
 
-@RequiredArgsConstructor
 public class DrawServiceImpl extends KeyAdapter implements DrawService {
     private static String USERNAME;
     private final int PERIOD_GAME = getPeriod();
     private final int TIME_GAME = getTimeGame();
 
-    private final WindowDraw draw;
+    private WindowDraw draw;
+
+    public DrawServiceImpl() {
+        draw = new WindowDraw();
+    }
+
     private static ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
     @Override
@@ -39,7 +42,7 @@ public class DrawServiceImpl extends KeyAdapter implements DrawService {
         List<int[]> map = toMap(parseResponse[1]);
         int timeLeft = Integer.parseInt(parseResponse[2]);
         draw.updateGame(map, timeLeft, 0, this, this::onForceFinishGame);
-        scheduler.scheduleAtFixedRate(this::drawUpdateWindow, 0, PERIOD_GAME, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(this::drawUpdateWindow, 0, PERIOD_GAME, TimeUnit.SECONDS);//todo scheduler
     }
 
     @Override
@@ -96,6 +99,12 @@ public class DrawServiceImpl extends KeyAdapter implements DrawService {
         String[] parseResponse = parseStrToArray(response);
         List<AppUser> appUsers = toListBestPlayers(parseResponse[1]);
         draw.drawMenu(appUsers, this::drawStartGame);
+    }
+
+    @Override
+    public void closeConnection() {
+        String response = sendCommand(Command.QUIT.name());
+        //todo response check
     }
 
     static Long lastKeyPressed = 0L;

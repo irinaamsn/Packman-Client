@@ -10,8 +10,17 @@ import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.function.Consumer;
 
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class GameResultsPage extends JFrame {
+    private static GameResultsPage instance;
+    private GameResultsPage(){
+    }
+    public static GameResultsPage getInstance(){
+        if (instance == null) {
+            instance = new GameResultsPage();
+        }
+        return instance;
+    }
     private JLabel usernameLabel;
     private JLabel pointsLabel;
     private JLabel positionLabel;

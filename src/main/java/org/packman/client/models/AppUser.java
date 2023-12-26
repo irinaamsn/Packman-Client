@@ -10,4 +10,9 @@ import lombok.Setter;
 public class AppUser {
     private String username;
     private int countPoints;
+
+    @Override
+    public String toString() {
+        return username + ": " + countPoints;
+    }
 }

@@ -16,32 +16,19 @@ import java.net.Socket;
 
 @RequiredArgsConstructor
 public class ClientSocket{
-    private static int PORT = 2020;
-    private static String SERVER_ADDRESS ="10.102.161.58";
-    private static DrawService drawService = new DrawServiceImpl(
-            new WindowDraw(
-                    new GameMenu(),
-                    new GamePage(),
-                    new GameResultsPage())
-    );
-   /* static {
-        try {
-            PORT = properties.getPort();
-            SERVER_ADDRESS = InetAddress.getLocalHost().getHostAddress();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-    }*/
+    private static final DrawService drawService = new DrawServiceImpl();
 
     private static PrintWriter out;
     private static BufferedReader in;
 
     public static void connection() {
+        String SERVER_ADDRESS = "10.102.161.58";
+        int PORT = 2020;
         try (Socket socket = new Socket(SERVER_ADDRESS, PORT)) {
             out = new PrintWriter(socket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             drawService.drawMenu();
-            while (true) {
+            while (true) {//todo add quit command
             }
         } catch (IOException e) {
             e.printStackTrace();

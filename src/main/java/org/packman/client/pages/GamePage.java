@@ -1,6 +1,5 @@
 package org.packman.client.pages;
 
-import lombok.RequiredArgsConstructor;
 import org.packman.client.services.impl.DrawServiceImpl;
 
 import javax.swing.*;
@@ -8,8 +7,16 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.List;
 
-@RequiredArgsConstructor
 public class GamePage extends JFrame {
+    private static GamePage instance;
+    private GamePage(){
+    }
+    public static GamePage getInstance(){
+        if (instance == null) {
+            instance = new GamePage();
+        }
+        return instance;
+    }
     private JLabel timeLabel;
     private JLabel pointsLabel;
     private JPanel mapPanel;

@@ -1,6 +1,5 @@
 package org.packman.client.pages;
 
-import lombok.RequiredArgsConstructor;
 import org.packman.client.models.AppUser;
 
 import javax.swing.*;
@@ -8,9 +7,16 @@ import java.awt.*;
 import java.util.List;
 import java.util.function.Consumer;
 
-@RequiredArgsConstructor
 public class GameMenu extends JFrame {
-    private JButton startButton;
+    private static GameMenu instance;
+    private GameMenu(){
+    }
+    public static GameMenu getInstance(){
+        if (instance == null) {
+            instance = new GameMenu();
+        }
+        return instance;
+    }
     private JTextField usernameField;
     private JTextArea leaderboardArea;
 
@@ -24,11 +30,12 @@ public class GameMenu extends JFrame {
 
         // Панель для ввода имени и кнопки "Старт"
         JPanel inputPanel = new JPanel(new FlowLayout());
-        startButton = new JButton("СТАРТ");
+        JButton startButton = new JButton("СТАРТ");
+        JButton exitButton = new JButton("ВЫЙТИ");
         usernameField = new JTextField("Введите имя", 15);
         inputPanel.add(usernameField);
         inputPanel.add(startButton);
-
+        inputPanel.add(exitButton);
         // Панель для отображения топа лучших игроков
         JPanel leaderboardPanel = new JPanel(new BorderLayout());
         leaderboardArea = new JTextArea();
@@ -50,6 +57,9 @@ public class GameMenu extends JFrame {
             onClickStart.accept(username);
         });
 
+        exitButton.addActionListener(e -> {
+
+        });
         // Обновление топа лучших игроков
         updateLeaderboard(bestPlayers);
 

@@ -8,4 +8,5 @@ public interface DrawService {
     void drawMoveKeys(MoveKeys move);
     void onForceFinishGame();
     void drawMenu();
+    void closeConnection();
 }
