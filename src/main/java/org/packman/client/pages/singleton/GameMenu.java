@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 public class GameMenu extends JFrame {
     JButton startButton = new JButton("СТАРТ");
     JButton exitButton = new JButton("ВЫЙТИ");
-    JTextField usernameField = new JTextField("Введите имя", 15);
+    JTextField usernameField = new JTextField("Введите ник", 15);
     private static GameMenu instance;
 
     private GameMenu() {
@@ -47,12 +47,6 @@ public class GameMenu extends JFrame {
         leaderboardPanel.add(new JLabel("Топ игроков:"), BorderLayout.NORTH);
         leaderboardPanel.add(scrollPane, BorderLayout.CENTER);
 
-        // Добавление панелей к основной панели
-        mainPanel.add(inputPanel);
-        mainPanel.add(leaderboardPanel);
-
-        // Добавление основной панели к JFrame
-        add(mainPanel);
 
         // Установка обработчика событий для кнопки "Старт"
         startButton.addActionListener(e -> {
@@ -67,6 +61,12 @@ public class GameMenu extends JFrame {
 //            setVisible(false);
             dispose();
         });
+
+        mainPanel.add(inputPanel);
+        mainPanel.add(leaderboardPanel);
+
+        // Добавление основной панели к JFrame
+        add(mainPanel);
         // Обновление топа лучших игроков
         updateLeaderboard(bestPlayers);
         setVisible(true);

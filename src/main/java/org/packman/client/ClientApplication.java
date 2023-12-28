@@ -7,6 +7,6 @@ public class ClientApplication {
     private static final DrawService drawService = new DrawServiceImpl();
     public static void main(String[] args) {
         drawService.tryConnection();
-//        connection();
+        System.out.println();
     }
 }

@@ -18,9 +18,11 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import static org.packman.client.draw.WindowDraw.drawConnection;
-import static org.packman.client.socket.ClientSocket.*;
+import static org.packman.client.socket.ClientSocket.quit;
+import static org.packman.client.socket.ClientSocket.sendCommand;
 import static org.packman.client.utils.ParseUtil.*;
-import static org.packman.client.utils.PropertiesUtil.*;
+import static org.packman.client.utils.PropertiesUtil.getPeriod;
+import static org.packman.client.utils.PropertiesUtil.getTimeGame;
 
 public class DrawServiceImpl extends KeyAdapter implements DrawService {
     private static String USERNAME;
@@ -28,7 +30,7 @@ public class DrawServiceImpl extends KeyAdapter implements DrawService {
     private final int TIME_GAME = getTimeGame();
 
     private WindowDraw draw;
-
+    private boolean isFinish=false;
     public DrawServiceImpl() {
         draw = new WindowDraw();
     }
@@ -42,7 +44,7 @@ public class DrawServiceImpl extends KeyAdapter implements DrawService {
         String[] parseResponse = parseStrToArray(response);
         List<int[]> map = toMap(parseResponse[1]);
         int timeLeft = Integer.parseInt(parseResponse[2]);
-        draw.startGame(map, timeLeft, 0, this, this::onForceFinishGame);
+        draw.updateGame(map, timeLeft, 0, this, this::onForceFinishGame);
 
         ScheduledFuture<?> scheduledFuture = scheduler.scheduleAtFixedRate(() -> {
             drawUpdateWindow();
@@ -88,10 +90,11 @@ public class DrawServiceImpl extends KeyAdapter implements DrawService {
     }
 
     private void drawFinishPage(int currentPoints, int currentPosition) {
+        isFinish=true;
         String responsePlayers = sendCommand(Command.GET_BEST_PLAYERS.name());
         String[] parseResponsePlayers = parseStrToArray(responsePlayers);
         List<AppUser> appUsers = toListBestPlayers(parseResponsePlayers[1]);
-        draw.drawFinish(USERNAME, appUsers, currentPoints, currentPosition, this::drawStartGame, this::drawMenu);
+        draw.drawFinish(USERNAME, appUsers, currentPoints, currentPosition, this::drawStartGame, this::closeConnection);
         scheduler.shutdown();
     }
 

@@ -24,14 +24,15 @@ public class GameResultsPage extends JFrame {
     private JLabel positionLabel;
     private JList<AppUser> bestPlayersList;
     private JButton playAgainButton;
-    private JButton menuButton;
+    private JButton exitButton;
     public void draw(String username, List<AppUser> bestPlayers, int currentPoints, int currentPosition,
-                     Consumer<String> onClickStartGame, Runnable onClickStartMenu) {
+                     Consumer<String> onClickStartGame, Runnable onClickExit) {
         setTitle("Результаты игры");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(600, 350);
         setLocationRelativeTo(null);
-
+        getContentPane().removeAll();
+        JPanel mainPanel = new JPanel(new GridLayout(1, 2));
         // Левая панель с результатами текущего игрока и кнопками
         JPanel leftPanel = new JPanel();
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
@@ -39,13 +40,13 @@ public class GameResultsPage extends JFrame {
         pointsLabel = new JLabel("Очки: " + currentPoints);
         positionLabel = new JLabel("Позиция: " + currentPosition);
         playAgainButton = new JButton("Играть снова");
-        menuButton = new JButton("Меню");
+        exitButton = new JButton("ВЫЙТИ");
 
         leftPanel.add(usernameLabel);
         leftPanel.add(pointsLabel);
         leftPanel.add(positionLabel);
         leftPanel.add(playAgainButton);
-        leftPanel.add(menuButton);
+        leftPanel.add(exitButton);
 
         // Правая панель со списком лучших игроков
         JPanel rightPanel = new JPanel(new BorderLayout());
@@ -62,17 +63,23 @@ public class GameResultsPage extends JFrame {
 
         // Обработчики событий для кнопок
         playAgainButton.addActionListener(e -> {
-            onClickStartGame.accept(username);
-            setVisible(false);
             dispose();
+
+//            mainPanel.updateUI();
+            onClickStartGame.accept(username);
         });
 
-        menuButton.addActionListener(e -> {
-            onClickStartMenu.run();
-            dispose();
+        exitButton.addActionListener(e -> {
+//            dispose();
+            onClickExit.run();
         });
 
         // Обновление отображения результатов текущего игрока и списка лучших игроков
+        mainPanel.add(leftPanel);
+        mainPanel.add(rightPanel);
+
+        // Добавление основной панели к JFrame
+        add(mainPanel);
         updateResults(username, currentPoints, currentPosition);
         updateBestPlayersList(bestPlayers);
         setVisible(true);

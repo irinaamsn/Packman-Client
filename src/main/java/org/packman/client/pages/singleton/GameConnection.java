@@ -40,15 +40,14 @@ public class GameConnection extends JFrame {
         // Создание кнопки "Подключиться к серверу"
         JButton connectButton = new JButton("Подключиться к серверу");
         connectButton.addActionListener(e -> {
-            // setVisible(false);
             dispose();
             try {
                 connection();
+                dispose();
             } catch (Exception ex) {
                 exceptionMessage = new JLabel("Ошибка подключения!");
                 panel.add(exceptionMessage);
                 setVisible(true);
-//                throw new RuntimeException(ex);
             }
         });
 

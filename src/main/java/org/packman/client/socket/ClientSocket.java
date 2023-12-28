@@ -34,16 +34,9 @@ public class ClientSocket {
                 @Override
                 protected Void doInBackground() throws Exception {
                     // Ваш метод с бесконечным циклом
-                    while (socket.isClosed()) {
+                    while (!socket.isClosed()) {
                     }
                     throw new SocketException();
-                }
-
-                @Override
-                protected void done() {
-//                    // В этом методе можно открыть новую форму, когда фоновая работа завершена
-//                    NewForm newForm = new NewForm();
-//                    newForm.setVisible(true);
                 }
             };
 
@@ -68,6 +61,7 @@ public class ClientSocket {
             socket.close();
             in.close();
             out.close();
+            System.exit(0);
         } catch (IOException e) {
             throw new RuntimeException();
         }
