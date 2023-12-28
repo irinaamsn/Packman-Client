@@ -14,6 +14,7 @@ import java.awt.event.KeyEvent;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import static org.packman.client.draw.WindowDraw.drawConnection;
@@ -42,7 +43,16 @@ public class DrawServiceImpl extends KeyAdapter implements DrawService {
         List<int[]> map = toMap(parseResponse[1]);
         int timeLeft = Integer.parseInt(parseResponse[2]);
         draw.updateGame(map, timeLeft, 0, this, this::onForceFinishGame);
-        scheduler.scheduleAtFixedRate(this::drawUpdateWindow, 0, PERIOD_GAME, TimeUnit.SECONDS);//todo scheduler
+
+        ScheduledFuture<?> scheduledFuture = scheduler.scheduleAtFixedRate(() -> {
+            drawUpdateWindow();
+        }, 0, PERIOD_GAME, TimeUnit.SECONDS);
+
+        scheduler.schedule(() -> {
+            System.out.println("Shutting down the scheduler...");
+            scheduledFuture.cancel(true);
+            scheduler.shutdown();
+        }, TIME_GAME, TimeUnit.SECONDS);
     }
 
     @Override

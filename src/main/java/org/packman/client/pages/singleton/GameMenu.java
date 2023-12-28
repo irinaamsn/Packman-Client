@@ -12,7 +12,21 @@ public class GameMenu extends JFrame {
     JButton exitButton = new JButton("ВЫЙТИ");
     JTextField usernameField = new JTextField("Введите имя", 15);
     private static GameMenu instance;
-    private GameMenu(){
+
+    private GameMenu() {
+
+    }
+
+    public static GameMenu getInstance() {
+        if (instance == null) {
+            instance = new GameMenu();
+        }
+        return instance;
+    }
+
+    private JTextArea leaderboardArea;
+
+    public void draw(List<AppUser> bestPlayers, Consumer<String> onClickStart, Runnable onClickExit) {
         setTitle("МЕНЮ");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1500, 1000);
@@ -40,27 +54,18 @@ public class GameMenu extends JFrame {
         // Добавление основной панели к JFrame
         add(mainPanel);
 
-        setVisible(true);
-    }
-    public static GameMenu getInstance(){
-        if (instance == null) {
-            instance = new GameMenu();
-        }
-        return instance;
-    }
-    private JTextArea leaderboardArea;
-
-    public void draw(List<AppUser> bestPlayers, Consumer<String> onClickStart, Runnable onClickExit ) {
         // Установка обработчика событий для кнопки "Старт"
         startButton.addActionListener(e -> {
             String username = usernameField.getText();
             onClickStart.accept(username);
+//            setVisible(false);
             dispose();
         });
 
         exitButton.addActionListener(e -> {
             onClickExit.run();
-            this.dispose();
+//            setVisible(false);
+            dispose();
         });
         // Обновление топа лучших игроков
         updateLeaderboard(bestPlayers);

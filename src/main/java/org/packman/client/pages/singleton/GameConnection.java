@@ -1,13 +1,9 @@
 package org.packman.client.pages.singleton;
 
-import org.packman.client.services.DrawService;
-import org.packman.client.services.impl.DrawServiceImpl;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.SocketException;
 
 import static org.packman.client.socket.ClientSocket.connection;
 
@@ -24,6 +20,8 @@ public class GameConnection extends JFrame {
         return instance;
     }
 
+    private JLabel exceptionMessage;
+
     public void draw() {
         // Установка заголовка и размеров окна
         setTitle("Главное окно");
@@ -35,19 +33,23 @@ public class GameConnection extends JFrame {
 
         // Создание приветственной метки
         JLabel welcomeLabel = new JLabel("Добро пожаловать!");
+        welcomeLabel.setHorizontalAlignment(JLabel.CENTER);
+        welcomeLabel.setVerticalAlignment(JLabel.CENTER);
+
 
         // Создание кнопки "Подключиться к серверу"
         JButton connectButton = new JButton("Подключиться к серверу");
         connectButton.addActionListener(e -> {
+            // setVisible(false);
+            dispose();
             try {
-                    ConnectedFrame connectedFrame = new ConnectedFrame();
-                    connectedFrame.setVisible(true);
-                    setVisible(false);
-                    dispose();
+                connection();
             } catch (Exception ex) {
-                throw new RuntimeException();
+                exceptionMessage = new JLabel("Ошибка подключения!");
+                panel.add(exceptionMessage);
+                setVisible(true);
+//                throw new RuntimeException(ex);
             }
-            // Закрытие текущего окна
         });
 
         // Добавление компонентов на панель
@@ -59,9 +61,9 @@ public class GameConnection extends JFrame {
         setVisible(true);
     }
 
-    class ConnectedFrame extends JFrame {
+    static class ExceptionFrame extends JFrame {
 
-        public ConnectedFrame() {
+        public ExceptionFrame() {
             // Установка заголовка и размеров окна
             setTitle("Окно подключения");
             setSize(400, 300);
@@ -78,12 +80,11 @@ public class GameConnection extends JFrame {
             okButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    GameMenu gameMenu = GameMenu.getInstance();
-                    gameMenu.setVisible(true);
-                    setVisible(false);
-                    dispose();
-                    connection();
-
+//                    GameMenu gameMenu = GameMenu.getInstance();
+//                    gameMenu.setVisible(true);
+//                    setVisible(false);
+//                    dispose();
+//                    connection();
                 }
             });
 
