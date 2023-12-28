@@ -40,13 +40,22 @@ public class WindowDraw {
         gameResultsPage.draw(username, bestPlayers, currentPoints, currentPosition, onClickStartGame, onClickStartMenu);
     }
 
-    public static void updateGame(
+    public static void startGame(
             List<int[]> map, int timeLeft,
             int currentPoints,
             DrawServiceImpl drawService,
             Runnable onClickForceFinishGame
     ) {
         gamePage.draw(map, timeLeft, currentPoints, drawService, onClickForceFinishGame);
+    }
+
+    public static void updateGame(
+            List<int[]> map, int timeLeft,
+            int currentPoints
+    ) {
+        gamePage.updateTimeLabel(timeLeft);
+        gamePage.updateMap(map);
+        gamePage.updatePointsLabel(currentPoints);
     }
 
     public static void updateLifeTime(int timeLife) {

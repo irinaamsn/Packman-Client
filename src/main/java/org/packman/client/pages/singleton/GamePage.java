@@ -26,6 +26,7 @@ public class GamePage extends JFrame {
 
     private int previousPoints = 0;
     private boolean isPlayBackgroundMusic = false;
+    private boolean isPageActive = false;
 
     private String filePathCoin = "src/main/resources/raw/coin.mp3";
     private String filePathBackgroundMusic = "src/main/resources/raw/background_music.mp3";
@@ -35,6 +36,17 @@ public class GamePage extends JFrame {
 
     public void draw(List<int[]> map, int timeLife, int currentPoints, DrawServiceImpl drawService,
                      Runnable onClickForceFinishGame) {
+        if (!isPlayBackgroundMusic) {
+            new Thread(() -> {
+                try {
+                    playBackgroundMusic();
+                } catch (Exception ignored) {
+                }
+            }).start();
+            isPlayBackgroundMusic = true;
+        }
+        isPageActive = true;
+
         setTitle("Игровая страница");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1500, 1000);
@@ -45,25 +57,6 @@ public class GamePage extends JFrame {
 
         timeLabel = new JLabel("Время: " + timeLife);
         pointsLabel = new JLabel("Очки: " + currentPoints);
-
-        if (!isPlayBackgroundMusic) {
-            new Thread(() -> {
-                try {
-                    playBackgroundMusic();
-                } catch (Exception ignored) {}
-            }).start();
-            isPlayBackgroundMusic = true;
-        }
-
-        if (currentPoints > previousPoints) {
-            new Thread(() -> {
-                try {
-                    playMusic(filePathCoin);
-                } catch (Exception ignored) {}
-            }).start();
-        }
-
-        previousPoints = currentPoints;
 
         JButton finishButton = new JButton("Завершить игру");
         finishButton.addActionListener((ActionEvent e) -> {
@@ -93,11 +86,15 @@ public class GamePage extends JFrame {
         setFocusable(true);
         setFocusTraversalKeysEnabled(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
     }
 
     public void finish() {
-        stopBackgroundMusic();
-        dispose();
+        if (isPageActive) {
+            stopBackgroundMusic();
+            isPageActive = false;
+            dispose();
+        }
     }
 
     public void updateTimeLabel(int timeLife) {
@@ -105,6 +102,15 @@ public class GamePage extends JFrame {
     }
 
     public void updatePointsLabel(int currentPoints) {
+        if (currentPoints > previousPoints) {
+            new Thread(() -> {
+                try {
+                    playMusic(filePathCoin);
+                } catch (Exception ignored) {
+                }
+            }).start();
+            previousPoints = currentPoints;
+        }
         pointsLabel.setText("Очки: " + currentPoints);
     }
 
@@ -115,14 +121,16 @@ public class GamePage extends JFrame {
     public static void playMusic(String path) throws Exception {
         FileInputStream fileInputStream = new FileInputStream(path);
         AdvancedPlayer player = new AdvancedPlayer(fileInputStream);
-        player.setPlayBackListener(new PlaybackListener() {});
+        player.setPlayBackListener(new PlaybackListener() {
+        });
         player.play();
     }
 
     public void playBackgroundMusic() throws Exception {
-        fileInputStream= new FileInputStream(filePathBackgroundMusic);
+        fileInputStream = new FileInputStream(filePathBackgroundMusic);
         playerBackgroundMusic = new AdvancedPlayer(fileInputStream);
-        playerBackgroundMusic.setPlayBackListener(new PlaybackListener() {});
+        playerBackgroundMusic.setPlayBackListener(new PlaybackListener() {
+        });
         playerBackgroundMusic.play();
     }
 

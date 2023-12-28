@@ -42,7 +42,7 @@ public class DrawServiceImpl extends KeyAdapter implements DrawService {
         String[] parseResponse = parseStrToArray(response);
         List<int[]> map = toMap(parseResponse[1]);
         int timeLeft = Integer.parseInt(parseResponse[2]);
-        draw.updateGame(map, timeLeft, 0, this, this::onForceFinishGame);
+        draw.startGame(map, timeLeft, 0, this, this::onForceFinishGame);
 
         ScheduledFuture<?> scheduledFuture = scheduler.scheduleAtFixedRate(() -> {
             drawUpdateWindow();
@@ -65,7 +65,7 @@ public class DrawServiceImpl extends KeyAdapter implements DrawService {
             List<int[]> map = toMap(parseResponse[1]);
             int timeLeft = Integer.parseInt(parseResponse[2]);
             int currentPoints = Integer.parseInt(parseResponse[3]);
-            draw.updateGame(map, timeLeft, currentPoints, this, this::onForceFinishGame);
+            draw.updateGame(map, timeLeft, currentPoints);
         } else if (parseResponse[0].equals(UpdateMapAnswer.FINISH_GAME.name()))
             drawFinishPage(Integer.parseInt(parseResponse[1]), Integer.parseInt(parseResponse[2]));
         else drawMenu();
@@ -81,7 +81,7 @@ public class DrawServiceImpl extends KeyAdapter implements DrawService {
             List<int[]> map = toMap(parseResponse[1]);
             int timeLeft = Integer.parseInt(parseResponse[2]);
             int currentPoints = Integer.parseInt(parseResponse[3]);
-            draw.updateGame(map, timeLeft, currentPoints, this, this::onForceFinishGame);
+            draw.updateGame(map, timeLeft, currentPoints);
         } else if (parseResponse[0].equals(MoveAnswer.FINISH_GAME.name()))
             drawFinishPage(Integer.parseInt(parseResponse[1]), Integer.parseInt(parseResponse[2]));
         else drawMenu();
