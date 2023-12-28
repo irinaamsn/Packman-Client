@@ -23,7 +23,7 @@ public class GameMenu extends JFrame {
     public void draw(List<AppUser> bestPlayers, Consumer<String> onClickStart) {
         setTitle("МЕНЮ");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(500, 300);
+        setSize(1500, 1000);
         setLocationRelativeTo(null);
 
         JPanel mainPanel = new JPanel(new GridLayout(1, 2));
@@ -55,6 +55,7 @@ public class GameMenu extends JFrame {
         startButton.addActionListener(e -> {
             String username = usernameField.getText();
             onClickStart.accept(username);
+            dispose();
         });
 
         exitButton.addActionListener(e -> {
@@ -64,6 +65,10 @@ public class GameMenu extends JFrame {
         updateLeaderboard(bestPlayers);
 
         setVisible(true);
+    }
+
+    public void close() {
+        dispose();
     }
 
     public void updateLeaderboard(List<AppUser> bestPlayers) {
