@@ -54,6 +54,7 @@ public class GamePage extends JFrame {
         JButton finishButton = new JButton("Завершить игру");
         finishButton.addActionListener((ActionEvent e) -> {
             onClickForceFinishGame.run();
+            dispose();
         });
 
         topPanel.add(timeLabel);
