@@ -110,6 +110,14 @@ public class GamePage extends JFrame {
 class MapPanel extends JPanel {
     private List<int[]> map;
 
+    private static final Image wallImage = new ImageIcon("src/main/resources/img/wall.jpeg").getImage();
+    private static final Image emptyImage = new ImageIcon("src/main/resources/img/empty.jpeg").getImage();
+    private static final Image playerImage = new ImageIcon("src/main/resources/img/packman.jpeg").getImage();
+    private static final Image weakCoinImage = new ImageIcon("src/main/resources/img/coin.png").getImage();
+    private static final Image meddleCoinImage = new ImageIcon("src/main/resources/img/coin.png").getImage();
+    private static final Image strongCoinImage = new ImageIcon("src/main/resources/img/coin.png").getImage();
+
+
     public MapPanel(List<int[]> map) {
         this.map = map;
     }
@@ -126,32 +134,59 @@ class MapPanel extends JPanel {
         int cellSize = 40;
         for (int i = 0; i < map.size(); i++) {
             for (int j = 0; j < map.get(i).length; j++) {
+                Image image = null;
                 switch (map.get(i)[j]) {
                     case 0:
-                        g.setColor(Color.WHITE); // Пустое место
+                        image = emptyImage;
                         break;
                     case 1:
-                        g.setColor(Color.BLUE); // Игрок
+                        // Игрок
+                        image = playerImage;
                         break;
                     case 2:
-                        g.setColor(Color.BLACK); // Стена
+                        // стена
+                        image = wallImage;
                         break;
                     case 3:
-                        g.setColor(Color.YELLOW); // Монета
+                        // Монета слабая
+                        image = weakCoinImage;
                         break;
                     case 4:
-                        g.setColor(Color.RED); // Монета, которая скоро исчезнет
+                        // Монета слабая, скоро исчезнет
+                        image = weakCoinImage;
+                        break;
+                    case 5:
+                        // Монета средняя
+                        image = meddleCoinImage;
+                        break;
+                    case 6:
+                        // Монета средняя, скоро исчезнет
+                        image = meddleCoinImage;
+                        break;
+                    case 7:
+                        // Монета сильная
+                        image = strongCoinImage;
+                        break;
+                    case 8:
+                        // Монета сильная, скоро исчезнет
+                        image = strongCoinImage;
                         break;
                     default:
-                        g.setColor(Color.WHITE);
+                        // Другие случаи
                 }
 
-                g.fillRect(j * cellSize, i * cellSize, cellSize, cellSize);
-                g.setColor(Color.BLACK);
-                g.drawRect(j * cellSize, i * cellSize, cellSize, cellSize);
+                if (image != null) {
+                    g.drawImage(image, j * cellSize, i * cellSize, cellSize, cellSize, this);
+                } else {
+                    g.setColor(Color.WHITE);
+                    g.fillRect(j * cellSize, i * cellSize, cellSize, cellSize);
+                    g.setColor(Color.BLACK);
+                    g.drawRect(j * cellSize, i * cellSize, cellSize, cellSize);
+                }
             }
         }
     }
+
 }
 
 
