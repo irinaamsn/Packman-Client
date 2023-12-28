@@ -20,6 +20,8 @@ public class GameConnection extends JFrame {
         return instance;
     }
 
+    private JLabel exceptionMessage;
+
     public void draw() {
         // Установка заголовка и размеров окна
         setTitle("Главное окно");
@@ -31,16 +33,22 @@ public class GameConnection extends JFrame {
 
         // Создание приветственной метки
         JLabel welcomeLabel = new JLabel("Добро пожаловать!");
+        welcomeLabel.setHorizontalAlignment(JLabel.CENTER);
+        welcomeLabel.setVerticalAlignment(JLabel.CENTER);
+
 
         // Создание кнопки "Подключиться к серверу"
         JButton connectButton = new JButton("Подключиться к серверу");
         connectButton.addActionListener(e -> {
+            // setVisible(false);
+            dispose();
             try {
-//                setVisible(false);
-                dispose();
                 connection();
             } catch (Exception ex) {
-                throw new RuntimeException();
+                exceptionMessage = new JLabel("Ошибка подключения!");
+                panel.add(exceptionMessage);
+                setVisible(true);
+//                throw new RuntimeException(ex);
             }
         });
 

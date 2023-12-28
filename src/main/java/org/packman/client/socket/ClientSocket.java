@@ -22,7 +22,7 @@ public class ClientSocket {
     private static BufferedReader in;
     private static Socket socket;
 
-    public static void connection() {
+    public static void connection() throws Exception {
         String SERVER_ADDRESS = getIP();
         int PORT = getPort();
         try {
@@ -50,7 +50,7 @@ public class ClientSocket {
             worker.execute();
 
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new Exception();
         }
     }
 
