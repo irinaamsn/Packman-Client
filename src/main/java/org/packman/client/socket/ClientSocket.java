@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.SocketException;
 
 import static org.packman.client.utils.PropertiesUtil.*;
 
@@ -29,7 +30,25 @@ public class ClientSocket {
             out = new PrintWriter(socket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             drawService.drawMenu();
-            while (!socket.isClosed()) {}
+            SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+                @Override
+                protected Void doInBackground() throws Exception {
+                    // Ваш метод с бесконечным циклом
+                    while (socket.isClosed()) {
+                    }
+                    throw new SocketException();
+                }
+
+                @Override
+                protected void done() {
+//                    // В этом методе можно открыть новую форму, когда фоновая работа завершена
+//                    NewForm newForm = new NewForm();
+//                    newForm.setVisible(true);
+                }
+            };
+
+            worker.execute();
+
         } catch (IOException e) {
             e.printStackTrace();
         }

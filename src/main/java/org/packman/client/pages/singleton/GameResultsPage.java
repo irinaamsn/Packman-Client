@@ -63,6 +63,7 @@ public class GameResultsPage extends JFrame {
         // Обработчики событий для кнопок
         playAgainButton.addActionListener(e -> {
             onClickStartGame.accept(username);
+            setVisible(false);
             dispose();
         });
 

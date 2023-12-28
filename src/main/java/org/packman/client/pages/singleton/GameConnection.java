@@ -1,13 +1,9 @@
 package org.packman.client.pages.singleton;
 
-import org.packman.client.services.DrawService;
-import org.packman.client.services.impl.DrawServiceImpl;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.SocketException;
 
 import static org.packman.client.socket.ClientSocket.connection;
 
@@ -40,14 +36,12 @@ public class GameConnection extends JFrame {
         JButton connectButton = new JButton("Подключиться к серверу");
         connectButton.addActionListener(e -> {
             try {
-                    ConnectedFrame connectedFrame = new ConnectedFrame();
-                    connectedFrame.setVisible(true);
-                    setVisible(false);
-                    dispose();
+//                setVisible(false);
+                dispose();
+                connection();
             } catch (Exception ex) {
                 throw new RuntimeException();
             }
-            // Закрытие текущего окна
         });
 
         // Добавление компонентов на панель
@@ -59,9 +53,9 @@ public class GameConnection extends JFrame {
         setVisible(true);
     }
 
-    class ConnectedFrame extends JFrame {
+    static class ExceptionFrame extends JFrame {
 
-        public ConnectedFrame() {
+        public ExceptionFrame() {
             // Установка заголовка и размеров окна
             setTitle("Окно подключения");
             setSize(400, 300);
@@ -78,12 +72,11 @@ public class GameConnection extends JFrame {
             okButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    GameMenu gameMenu = GameMenu.getInstance();
-                    gameMenu.setVisible(true);
-                    setVisible(false);
-                    dispose();
-                    connection();
-
+//                    GameMenu gameMenu = GameMenu.getInstance();
+//                    gameMenu.setVisible(true);
+//                    setVisible(false);
+//                    dispose();
+//                    connection();
                 }
             });
 
