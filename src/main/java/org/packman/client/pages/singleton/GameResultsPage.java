@@ -4,8 +4,7 @@ import org.packman.client.models.AppUser;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -62,20 +61,14 @@ public class GameResultsPage extends JFrame {
         add(rightPanel);
 
         // Обработчики событий для кнопок
-        playAgainButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                onClickStartGame.accept(username);
-                dispose();
-            }
+        playAgainButton.addActionListener(e -> {
+            onClickStartGame.accept(username);
+            dispose();
         });
 
-        menuButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                onClickStartMenu.run();
-                dispose();
-            }
+        menuButton.addActionListener(e -> {
+            onClickStartMenu.run();
+            dispose();
         });
 
         // Обновление отображения результатов текущего игрока и списка лучших игроков
