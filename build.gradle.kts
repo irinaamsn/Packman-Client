@@ -15,6 +15,7 @@ dependencies {
     //lombok
     implementation("org.projectlombok:lombok:1.18.26")
     annotationProcessor("org.projectlombok:lombok:1.18.26")
+    implementation("javazoom:jlayer:1.0.1")
 }
 
 tasks.test {

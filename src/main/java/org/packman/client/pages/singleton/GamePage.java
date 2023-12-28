@@ -1,10 +1,14 @@
 package org.packman.client.pages.singleton;
 
+import javazoom.jl.player.advanced.AdvancedPlayer;
+import javazoom.jl.player.advanced.PlaybackEvent;
+import javazoom.jl.player.advanced.PlaybackListener;
 import org.packman.client.services.impl.DrawServiceImpl;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.FileInputStream;
 import java.util.List;
 
 public class GamePage extends JFrame {
@@ -21,6 +25,9 @@ public class GamePage extends JFrame {
     private JLabel pointsLabel;
     private JPanel mapPanel;
 
+    private int previousPoints = 0;
+    private static String filePathCoin = "src/main/resources/raw/coin.mp3";
+
     public void draw(List<int[]> map, int timeLife, int currentPoints, DrawServiceImpl drawService,
                      Runnable onClickForceFinishGame) {
         setTitle("Игровая страница");
@@ -33,6 +40,16 @@ public class GamePage extends JFrame {
 
         timeLabel = new JLabel("Время: " + timeLife);
         pointsLabel = new JLabel("Очки: " + currentPoints);
+
+        if (currentPoints > previousPoints) {
+            try {
+                playMusic();
+            } catch (Exception ignored) {
+
+            }
+        }
+
+        previousPoints = currentPoints;
 
         JButton finishButton = new JButton("Завершить игру");
         finishButton.addActionListener((ActionEvent e) -> {
@@ -73,6 +90,20 @@ public class GamePage extends JFrame {
 
     public void updateMap(List<int[]> map) {
         ((MapPanel) mapPanel).updateMap(map);
+    }
+
+    public static void playMusic() throws Exception {
+        FileInputStream fileInputStream = new FileInputStream(filePathCoin);
+
+        AdvancedPlayer player = new AdvancedPlayer(fileInputStream);
+        player.setPlayBackListener(new PlaybackListener() {
+            @Override
+            public void playbackFinished(PlaybackEvent evt) {
+                System.out.println("Playback finished");
+            }
+        });
+
+        player.play();
     }
 }
 
