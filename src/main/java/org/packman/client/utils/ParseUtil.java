@@ -50,5 +50,5 @@ public class ParseUtil {
 
     public static String[] parseStrToArray(String input) {
         return input.split("\\s{2}");
-    }//todo!!Pattern
+    }
 }

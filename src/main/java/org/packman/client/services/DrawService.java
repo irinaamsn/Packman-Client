@@ -9,4 +9,5 @@ public interface DrawService {
     void onForceFinishGame();
     void drawMenu();
     void closeConnection();
+    void tryConnection();
 }

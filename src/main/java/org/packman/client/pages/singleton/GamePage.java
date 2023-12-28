@@ -1,4 +1,4 @@
-package org.packman.client.pages;
+package org.packman.client.pages.singleton;
 
 import org.packman.client.services.impl.DrawServiceImpl;
 

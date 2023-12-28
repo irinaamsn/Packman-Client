@@ -1,6 +1,5 @@
-package org.packman.client.pages;
+package org.packman.client.pages.singleton;
 
-import lombok.RequiredArgsConstructor;
 import org.packman.client.models.AppUser;
 
 import javax.swing.*;

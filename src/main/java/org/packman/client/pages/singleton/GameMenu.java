@@ -1,4 +1,4 @@
-package org.packman.client.pages;
+package org.packman.client.pages.singleton;
 
 import org.packman.client.models.AppUser;
 
@@ -8,19 +8,11 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class GameMenu extends JFrame {
+    JButton startButton = new JButton("СТАРТ");
+    JButton exitButton = new JButton("ВЫЙТИ");
+    JTextField usernameField = new JTextField("Введите имя", 15);
     private static GameMenu instance;
     private GameMenu(){
-    }
-    public static GameMenu getInstance(){
-        if (instance == null) {
-            instance = new GameMenu();
-        }
-        return instance;
-    }
-    private JTextField usernameField;
-    private JTextArea leaderboardArea;
-
-    public void draw(List<AppUser> bestPlayers, Consumer<String> onClickStart) {
         setTitle("МЕНЮ");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(500, 300);
@@ -30,9 +22,6 @@ public class GameMenu extends JFrame {
 
         // Панель для ввода имени и кнопки "Старт"
         JPanel inputPanel = new JPanel(new FlowLayout());
-        JButton startButton = new JButton("СТАРТ");
-        JButton exitButton = new JButton("ВЫЙТИ");
-        usernameField = new JTextField("Введите имя", 15);
         inputPanel.add(usernameField);
         inputPanel.add(startButton);
         inputPanel.add(exitButton);
@@ -51,6 +40,17 @@ public class GameMenu extends JFrame {
         // Добавление основной панели к JFrame
         add(mainPanel);
 
+        setVisible(true);
+    }
+    public static GameMenu getInstance(){
+        if (instance == null) {
+            instance = new GameMenu();
+        }
+        return instance;
+    }
+    private JTextArea leaderboardArea;
+
+    public void draw(List<AppUser> bestPlayers, Consumer<String> onClickStart, Runnable onClickExit ) {
         // Установка обработчика событий для кнопки "Старт"
         startButton.addActionListener(e -> {
             String username = usernameField.getText();
@@ -58,11 +58,11 @@ public class GameMenu extends JFrame {
         });
 
         exitButton.addActionListener(e -> {
-
+            onClickExit.run();
+            this.dispose();
         });
         // Обновление топа лучших игроков
         updateLeaderboard(bestPlayers);
-
         setVisible(true);
     }
 

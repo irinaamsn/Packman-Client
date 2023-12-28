@@ -16,10 +16,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import static org.packman.client.socket.ClientSocket.sendCommand;
+import static org.packman.client.draw.WindowDraw.drawConnection;
+import static org.packman.client.socket.ClientSocket.*;
 import static org.packman.client.utils.ParseUtil.*;
-import static org.packman.client.utils.PropertiesUtil.getPeriod;
-import static org.packman.client.utils.PropertiesUtil.getTimeGame;
+import static org.packman.client.utils.PropertiesUtil.*;
 
 public class DrawServiceImpl extends KeyAdapter implements DrawService {
     private static String USERNAME;
@@ -32,7 +32,7 @@ public class DrawServiceImpl extends KeyAdapter implements DrawService {
         draw = new WindowDraw();
     }
 
-    private static ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
     @Override
     public void drawStartGame(String username) {
@@ -98,13 +98,17 @@ public class DrawServiceImpl extends KeyAdapter implements DrawService {
         String response = sendCommand(Command.GET_BEST_PLAYERS.name());
         String[] parseResponse = parseStrToArray(response);
         List<AppUser> appUsers = toListBestPlayers(parseResponse[1]);
-        draw.drawMenu(appUsers, this::drawStartGame);
+        draw.drawMenu(appUsers, this::drawStartGame, this::closeConnection);
     }
 
     @Override
     public void closeConnection() {
-        String response = sendCommand(Command.QUIT.name());
-        //todo response check
+        quit();
+    }
+
+    @Override
+    public void tryConnection() {
+        drawConnection();
     }
 
     static Long lastKeyPressed = 0L;
