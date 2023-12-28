@@ -72,10 +72,6 @@ public class GameMenu extends JFrame {
         setVisible(true);
     }
 
-    public void close() {
-        dispose();
-    }
-
     public void updateLeaderboard(List<AppUser> bestPlayers) {
         StringBuilder leaderboardText = new StringBuilder();
         for (AppUser player : bestPlayers) {

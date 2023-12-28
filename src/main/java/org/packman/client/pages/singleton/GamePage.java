@@ -1,7 +1,6 @@
 package org.packman.client.pages.singleton;
 
 import javazoom.jl.player.advanced.AdvancedPlayer;
-import javazoom.jl.player.advanced.PlaybackEvent;
 import javazoom.jl.player.advanced.PlaybackListener;
 import org.packman.client.services.impl.DrawServiceImpl;
 
@@ -26,7 +25,13 @@ public class GamePage extends JFrame {
     private JPanel mapPanel;
 
     private int previousPoints = 0;
-    private static String filePathCoin = "src/main/resources/raw/coin.mp3";
+    private boolean isPlayBackgroundMusic = false;
+
+    private String filePathCoin = "src/main/resources/raw/coin.mp3";
+    private String filePathBackgroundMusic = "src/main/resources/raw/background_music.mp3";
+
+    private FileInputStream fileInputStream;
+    private AdvancedPlayer playerBackgroundMusic;
 
     public void draw(List<int[]> map, int timeLife, int currentPoints, DrawServiceImpl drawService,
                      Runnable onClickForceFinishGame) {
@@ -41,10 +46,19 @@ public class GamePage extends JFrame {
         timeLabel = new JLabel("Время: " + timeLife);
         pointsLabel = new JLabel("Очки: " + currentPoints);
 
+        if (!isPlayBackgroundMusic) {
+            new Thread(() -> {
+                try {
+                    playBackgroundMusic();
+                } catch (Exception ignored) {}
+            }).start();
+            isPlayBackgroundMusic = true;
+        }
+
         if (currentPoints > previousPoints) {
             new Thread(() -> {
                 try {
-                    playMusic();
+                    playMusic(filePathCoin);
                 } catch (Exception ignored) {}
             }).start();
         }
@@ -54,7 +68,7 @@ public class GamePage extends JFrame {
         JButton finishButton = new JButton("Завершить игру");
         finishButton.addActionListener((ActionEvent e) -> {
             onClickForceFinishGame.run();
-            dispose();
+            finish();
         });
 
         topPanel.add(timeLabel);
@@ -81,6 +95,11 @@ public class GamePage extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
+    public void finish() {
+        stopBackgroundMusic();
+        dispose();
+    }
+
     public void updateTimeLabel(int timeLife) {
         timeLabel.setText("Время: " + timeLife);
     }
@@ -93,18 +112,25 @@ public class GamePage extends JFrame {
         ((MapPanel) mapPanel).updateMap(map);
     }
 
-    public static void playMusic() throws Exception {
-        FileInputStream fileInputStream = new FileInputStream(filePathCoin);
-
+    public static void playMusic(String path) throws Exception {
+        FileInputStream fileInputStream = new FileInputStream(path);
         AdvancedPlayer player = new AdvancedPlayer(fileInputStream);
-        player.setPlayBackListener(new PlaybackListener() {
-            @Override
-            public void playbackFinished(PlaybackEvent evt) {
-                System.out.println("Playback finished");
-            }
-        });
-
+        player.setPlayBackListener(new PlaybackListener() {});
         player.play();
+    }
+
+    public void playBackgroundMusic() throws Exception {
+        fileInputStream= new FileInputStream(filePathBackgroundMusic);
+        playerBackgroundMusic = new AdvancedPlayer(fileInputStream);
+        playerBackgroundMusic.setPlayBackListener(new PlaybackListener() {});
+        playerBackgroundMusic.play();
+    }
+
+    public void stopBackgroundMusic() {
+        if (isPlayBackgroundMusic) {
+            playerBackgroundMusic.stop();
+            isPlayBackgroundMusic = false;
+        }
     }
 }
 
