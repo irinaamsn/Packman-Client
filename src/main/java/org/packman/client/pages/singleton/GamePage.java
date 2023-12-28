@@ -42,11 +42,11 @@ public class GamePage extends JFrame {
         pointsLabel = new JLabel("Очки: " + currentPoints);
 
         if (currentPoints > previousPoints) {
-            try {
-                playMusic();
-            } catch (Exception ignored) {
-
-            }
+            new Thread(() -> {
+                try {
+                    playMusic();
+                } catch (Exception ignored) {}
+            }).start();
         }
 
         previousPoints = currentPoints;
