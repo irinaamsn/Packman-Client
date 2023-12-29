@@ -29,7 +29,7 @@ public class GamePage extends JFrame {
     private boolean isPageActive = false;
 
     private String filePathCoin = "src/main/resources/raw/coin.mp3";
-    private String filePathBackgroundMusic = "src/main/resources/raw/background_music.mp3";
+    private String filePathBackgroundMusic = "src/main/resources/raw/back_music.mp3";
 
     private FileInputStream fileInputStream;
     private AdvancedPlayer playerBackgroundMusic;
@@ -95,6 +95,7 @@ public class GamePage extends JFrame {
         if (isPageActive) {
             stopBackgroundMusic();
             isPageActive = false;
+            previousPoints = 0;
             dispose();
         }
     }
@@ -149,10 +150,16 @@ class MapPanel extends JPanel {
 
     private static final Image wallImage = new ImageIcon("src/main/resources/img/wall.jpeg").getImage();
     private static final Image emptyImage = new ImageIcon("src/main/resources/img/empty.jpeg").getImage();
-    private static final Image playerImage = new ImageIcon("src/main/resources/img/packman.png").getImage();
-    private static final Image weakCoinImage = new ImageIcon("src/main/resources/img/pizza.png").getImage();
-    private static final Image meddleCoinImage = new ImageIcon("src/main/resources/img/coin.png").getImage();
-    private static final Image strongCoinImage = new ImageIcon("src/main/resources/img/vege.png").getImage();
+    private static final Image playerImage = new ImageIcon("src/main/resources/img/player.jpeg").getImage();
+
+    private static final Image pizzaImage = new ImageIcon("src/main/resources/img/pizza.jpeg").getImage();
+    private static final Image pizzaWeakImage = new ImageIcon("src/main/resources/img/pizza_weak.jpeg").getImage();
+
+    private static final Image burgerImage = new ImageIcon("src/main/resources/img/burger.jpeg").getImage();
+    private static final Image burgerWeakImage = new ImageIcon("src/main/resources/img/burger_weak.jpeg").getImage();
+
+    private static final Image vegetablesImage = new ImageIcon("src/main/resources/img/vegetables.jpeg").getImage();
+    private static final Image vegetablesWeakImage = new ImageIcon("src/main/resources/img/vegetables_weak.jpeg").getImage();
 
 
     public MapPanel(List<int[]> map) {
@@ -186,27 +193,27 @@ class MapPanel extends JPanel {
                         break;
                     case 3:
                         // Монета слабая
-                        image = weakCoinImage;
+                        image = pizzaImage;
                         break;
                     case 4:
                         // Монета слабая, скоро исчезнет
-                        image = weakCoinImage;
+                        image = pizzaWeakImage;
                         break;
                     case 5:
                         // Монета средняя
-                        image = meddleCoinImage;
+                        image = burgerImage;
                         break;
                     case 6:
                         // Монета средняя, скоро исчезнет
-                        image = meddleCoinImage;
+                        image = burgerWeakImage;
                         break;
                     case 7:
                         // Монета сильная
-                        image = strongCoinImage;
+                        image = vegetablesImage;
                         break;
                     case 8:
                         // Монета сильная, скоро исчезнет
-                        image = strongCoinImage;
+                        image = vegetablesWeakImage;
                         break;
                     default:
                         // Другие случаи

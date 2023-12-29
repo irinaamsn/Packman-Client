@@ -4,12 +4,14 @@ import org.packman.client.models.AppUser;
 
 import javax.swing.*;
 import java.awt.*;
+import java.net.URL;
 import java.util.List;
 import java.util.function.Consumer;
 
 public class GameResultsPage extends JFrame {
     private static GameResultsPage instance;
 
+    private JLabel gifLabel;
     private JLabel titleLabel;
     private JLabel usernameLabel;
     private JLabel pointsLabel;
@@ -49,6 +51,31 @@ public class GameResultsPage extends JFrame {
         JPanel leftPanel = new JPanel();
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
 
+        String pathGif;
+        if (currentPosition==1) {
+            pathGif = "/gif/finish/ultra_turbo_mega_horosh.gif";
+        } else if (currentPosition == 2) {
+            pathGif = "/gif/finish/like_a_boss.gif";
+        } else if (currentPosition <= 10) {
+            pathGif = "/gif/finish/mega_horosh.gif";
+        } else {
+            pathGif = "/gif/finish/ne_ploh.gif";
+        }
+
+        URL gifUrl = getClass().getResource(pathGif);
+        if (gifUrl != null) {
+            int loaderWidth = 200;
+            int loaderHeight = 200;
+
+            ImageIcon loaderIcon = new ImageIcon(gifUrl);
+            Image loaderImage = loaderIcon.getImage().getScaledInstance(loaderWidth, loaderHeight, Image.SCALE_DEFAULT);
+
+            // Создание метки для отображения крутилки
+            gifLabel = new JLabel(new ImageIcon(loaderImage));
+            gifLabel.setVisible(true);
+            gifLabel.setSize(new Dimension(loaderWidth, loaderHeight));
+        }
+
         titleLabel = new JLabel("Результаты игры");
         titleLabel.setHorizontalAlignment(JLabel.CENTER);
         titleLabel.setFont(new Font(titleLabel.getFont().getName(), Font.BOLD, 24));
@@ -83,10 +110,12 @@ public class GameResultsPage extends JFrame {
         leftPanel.add(playAgainButton);
         leftPanel.add(Box.createRigidArea(new Dimension(0, 10))); // Vertical space
         leftPanel.add(exitButton);
+        leftPanel.add(Box.createRigidArea(new Dimension(0, 10))); // Vertical space
+        leftPanel.add(gifLabel);
         leftPanel.add(Box.createVerticalGlue());
 
         JPanel rightPanel = new JPanel(new BorderLayout());
-        bestPlayersTitleLabel = new JLabel("Список лучших игроков");
+        bestPlayersTitleLabel = new JLabel("Список лучших игр");
         bestPlayersTitleLabel.setHorizontalAlignment(JLabel.CENTER);
         bestPlayersTitleLabel.setFont(new Font(bestPlayersTitleLabel.getFont().getName(), Font.BOLD, 18));
         bestPlayersLabel = new JLabel(playersText.toString());

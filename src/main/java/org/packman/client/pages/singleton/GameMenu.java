@@ -13,9 +13,7 @@ public class GameMenu extends JFrame {
     JTextField usernameField = new JTextField("Чочовец", 15);
     private static GameMenu instance;
 
-    private GameMenu() {
-
-    }
+    private GameMenu() {}
 
     public static GameMenu getInstance() {
         if (instance == null) {
@@ -24,9 +22,8 @@ public class GameMenu extends JFrame {
         return instance;
     }
 
-    private JTextArea leaderboardArea;
-
     public void draw(List<AppUser> bestPlayers, Consumer<String> onClickStart, Runnable onClickExit) {
+        getContentPane().removeAll();
         setTitle("МЕНЮ");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 666);
@@ -125,11 +122,4 @@ public class GameMenu extends JFrame {
         setVisible(true);
     }
 
-    public void updateLeaderboard(List<AppUser> bestPlayers) {
-        StringBuilder leaderboardText = new StringBuilder();
-        for (AppUser player : bestPlayers) {
-            leaderboardText.append(player.getUsername()).append(": ").append(player.getCountPoints()).append("\n").append("\n");
-        }
-        leaderboardArea.setText(leaderboardText.toString());
-    }
 }

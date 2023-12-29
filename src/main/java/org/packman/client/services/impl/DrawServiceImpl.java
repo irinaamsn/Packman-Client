@@ -96,7 +96,6 @@ public class DrawServiceImpl extends KeyAdapter implements DrawService {
         String[] parseResponsePlayers = parseStrToArray(responsePlayers);
         List<AppUser> appUsers = toListBestPlayers(parseResponsePlayers[1]);
         draw.drawFinish(USERNAME, appUsers, currentPoints, currentPosition, this::drawStartGame, this::closeConnection);
-        scheduler.shutdown();
     }
 
     @Override

@@ -42,7 +42,7 @@ public class GameConnection extends JFrame {
         welcomeLabel.setVerticalAlignment(JLabel.CENTER);
 
         // Загрузка GIF-анимации для крутилки
-        URL loaderUrl = getClass().getResource("/gif/loader.gif");
+        URL loaderUrl = getClass().getResource("/gif/menu/loader.gif");
         if (loaderUrl != null) {
             int loaderWidth = 200;
             int loaderHeight = 200;
@@ -64,19 +64,18 @@ public class GameConnection extends JFrame {
                 connectButton.setEnabled(false); // Запрещаем повторное нажатие кнопки
                 loaderLabel.setVisible(true); // Показываем крутилку
                 welcomeLabel.setText("Идет подключение...");
+                exceptionMessage.setVisible(false);
 
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            connection();
-                            dispose();
-                        } catch (Exception ex) {
-                            exceptionMessage.setText("Ошибка подключения!");
-                            loaderLabel.setVisible(false); // Скрываем крутилку
-                            connectButton.setEnabled(true); // Разрешаем повторное нажатие кнопки
-                            welcomeLabel.setText("Добро пожаловать!");
-                        }
+                new Thread(() -> {
+                    try {
+                        connection();
+                        dispose();
+                    } catch (Exception ex) {
+                        exceptionMessage.setText("Ошибка подключения!");
+                        exceptionMessage.setVisible(true);
+                        loaderLabel.setVisible(false); // Скрываем крутилку
+                        connectButton.setEnabled(true); // Разрешаем повторное нажатие кнопки
+                        welcomeLabel.setText("Добро пожаловать!");
                     }
                 }).start();
             }
