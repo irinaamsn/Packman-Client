@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URL;
 
 import static org.packman.client.socket.ClientSocket.connection;
 
@@ -20,80 +21,95 @@ public class GameConnection extends JFrame {
         return instance;
     }
 
+    private JLabel welcomeLabel;
+    private JButton connectButton;
+    private JLabel loaderLabel;
     private JLabel exceptionMessage;
 
     public void draw() {
         // Установка заголовка и размеров окна
-        setTitle("Главное окно");
-        setSize(400, 300);
+        setTitle("Подключение");
+        setSize(800, 666);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // Создание панели с макетом BorderLayout
-        JPanel panel = new JPanel(new BorderLayout());
+        // Создание панели с макетом GridBagLayout
+        JPanel panel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
 
         // Создание приветственной метки
-        JLabel welcomeLabel = new JLabel("Добро пожаловать!");
+        welcomeLabel = new JLabel("Добро пожаловать!");
         welcomeLabel.setHorizontalAlignment(JLabel.CENTER);
         welcomeLabel.setVerticalAlignment(JLabel.CENTER);
 
+        // Загрузка GIF-анимации для крутилки
+        URL loaderUrl = getClass().getResource("/gif/loader.gif");
+        if (loaderUrl != null) {
+            int loaderWidth = 200;
+            int loaderHeight = 200;
+
+            ImageIcon loaderIcon = new ImageIcon(loaderUrl);
+            Image loaderImage = loaderIcon.getImage().getScaledInstance(loaderWidth, loaderHeight, Image.SCALE_DEFAULT);
+
+            // Создание метки для отображения крутилки
+            loaderLabel = new JLabel(new ImageIcon(loaderImage));
+            loaderLabel.setVisible(false);
+            loaderLabel.setSize(new Dimension(loaderWidth, loaderHeight));
+        }
 
         // Создание кнопки "Подключиться к серверу"
-        JButton connectButton = new JButton("Подключиться к серверу");
-        connectButton.addActionListener(e -> {
-            dispose();
-            try {
-                connection();
-                dispose();
-            } catch (Exception ex) {
-                exceptionMessage = new JLabel("Ошибка подключения!");
-                panel.add(exceptionMessage);
-                setVisible(true);
+        connectButton = new JButton("Подключиться к серверу");
+        connectButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                connectButton.setEnabled(false); // Запрещаем повторное нажатие кнопки
+                loaderLabel.setVisible(true); // Показываем крутилку
+                welcomeLabel.setText("Идет подключение...");
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            connection();
+                            dispose();
+                        } catch (Exception ex) {
+                            exceptionMessage.setText("Ошибка подключения!");
+                            loaderLabel.setVisible(false); // Скрываем крутилку
+                            connectButton.setEnabled(true); // Разрешаем повторное нажатие кнопки
+                            welcomeLabel.setText("Добро пожаловать!");
+                        }
+                    }
+                }).start();
             }
         });
 
+        // Создание метки для отображения ошибки подключения
+        exceptionMessage = new JLabel();
+        exceptionMessage.setForeground(Color.RED);
+
+        // Настройка параметров GridBagConstraints для центрирования компонентов
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.PAGE_START;
+        gbc.insets = new Insets(20, 0, 0, 0); // Вертикальный отступ
+
         // Добавление компонентов на панель
-        panel.add(welcomeLabel, BorderLayout.CENTER);
-        panel.add(connectButton, BorderLayout.SOUTH);
+        panel.add(welcomeLabel, gbc);
+        gbc.gridy = 1;
+        gbc.insets = new Insets(20, 0, 0, 0); // Вертикальный отступ
+        panel.add(connectButton, gbc);
+        gbc.gridy = 2;
+        panel.add(loaderLabel, gbc);
+        gbc.gridy = 3;
+        panel.add(exceptionMessage, gbc);
 
         // Добавление панели на окно
         add(panel);
+
+        // Размещение окна посередине экрана
+        setLocationRelativeTo(null);
+
         setVisible(true);
     }
-
-    static class ExceptionFrame extends JFrame {
-
-        public ExceptionFrame() {
-            // Установка заголовка и размеров окна
-            setTitle("Окно подключения");
-            setSize(400, 300);
-            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-            // Создание панели с макетом BorderLayout
-            JPanel panel = new JPanel(new BorderLayout());
-
-            // Создание приветственной метки для окна подключения
-            JLabel connectedLabel = new JLabel("Подключено к серверу!");
-
-            // Создание кнопки "Ок"
-            JButton okButton = new JButton("Ок");
-            okButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-//                    GameMenu gameMenu = GameMenu.getInstance();
-//                    gameMenu.setVisible(true);
-//                    setVisible(false);
-//                    dispose();
-//                    connection();
-                }
-            });
-
-            // Добавление компонентов на панель
-            panel.add(connectedLabel, BorderLayout.CENTER);
-            panel.add(okButton, BorderLayout.SOUTH);
-
-            // Добавление панели на окно
-            add(panel);
-            setVisible(true);
-        }
-    }
 }
+
+

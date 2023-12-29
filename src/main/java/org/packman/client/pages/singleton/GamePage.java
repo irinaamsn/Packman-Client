@@ -47,9 +47,9 @@ public class GamePage extends JFrame {
         }
         isPageActive = true;
 
-        setTitle("Игровая страница");
+        setTitle("Пакмэн");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1500, 1000);
+        setSize(800, 666);
         setLocationRelativeTo(null);
 
         // Верхняя панель с временем, очками и кнопкой
@@ -65,7 +65,9 @@ public class GamePage extends JFrame {
         });
 
         topPanel.add(timeLabel);
+        topPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         topPanel.add(pointsLabel);
+        topPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         topPanel.add(finishButton);
 
         // Нижняя панель с отображением карты
