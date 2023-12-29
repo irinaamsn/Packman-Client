@@ -18,6 +18,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import static org.packman.client.draw.WindowDraw.drawConnection;
+import static org.packman.client.draw.WindowDraw.startGame;
 import static org.packman.client.socket.ClientSocket.quit;
 import static org.packman.client.socket.ClientSocket.sendCommand;
 import static org.packman.client.utils.ParseUtil.*;
@@ -35,7 +36,7 @@ public class DrawServiceImpl extends KeyAdapter implements DrawService {
         draw = new WindowDraw();
     }
 
-    private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    private ScheduledExecutorService scheduler;
 
     @Override
     public void drawStartGame(String username) {
@@ -44,11 +45,11 @@ public class DrawServiceImpl extends KeyAdapter implements DrawService {
         String[] parseResponse = parseStrToArray(response);
         List<int[]> map = toMap(parseResponse[1]);
         int timeLeft = Integer.parseInt(parseResponse[2]);
-        draw.updateGame(map, timeLeft, 0, this, this::onForceFinishGame);
+        startGame(map, timeLeft, 0, this, this::onForceFinishGame);
 
-        ScheduledFuture<?> scheduledFuture = scheduler.scheduleAtFixedRate(() -> {
-            drawUpdateWindow();
-        }, 0, PERIOD_GAME, TimeUnit.SECONDS);
+        scheduler = Executors.newScheduledThreadPool(1);
+
+        ScheduledFuture<?> scheduledFuture = scheduler.scheduleAtFixedRate(this::drawUpdateWindow, 0, PERIOD_GAME, TimeUnit.SECONDS);
 
         scheduler.schedule(() -> {
             System.out.println("Shutting down the scheduler...");
@@ -90,7 +91,7 @@ public class DrawServiceImpl extends KeyAdapter implements DrawService {
     }
 
     private void drawFinishPage(int currentPoints, int currentPosition) {
-        isFinish=true;
+        scheduler.shutdown();
         String responsePlayers = sendCommand(Command.GET_BEST_PLAYERS.name());
         String[] parseResponsePlayers = parseStrToArray(responsePlayers);
         List<AppUser> appUsers = toListBestPlayers(parseResponsePlayers[1]);
@@ -100,6 +101,7 @@ public class DrawServiceImpl extends KeyAdapter implements DrawService {
 
     @Override
     public void onForceFinishGame() {
+        scheduler.shutdown();
         String response = sendCommand(Command.FORCE_FINISH.name());
         String[] parseResponse = parseStrToArray(response);
         if (parseResponse[0].equals(FinishAnswer.ERROR_GAME_NOT_EXISTS.name())) drawMenu();

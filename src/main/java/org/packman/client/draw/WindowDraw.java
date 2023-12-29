@@ -36,9 +36,8 @@ public class WindowDraw {
             Consumer<String> onClickStartGame,
             Runnable onClickExit
     ) {
-        gameResultsPage.draw(username, bestPlayers, currentPoints, currentPosition, onClickStartGame, onClickExit);
         gamePage.finish();
-        gameResultsPage.draw(username, bestPlayers, currentPoints, currentPosition, onClickStartGame, onClickStartMenu);
+        gameResultsPage.draw(username, bestPlayers, currentPoints, currentPosition, onClickStartGame,onClickExit);
     }
 
     public static void startGame(
