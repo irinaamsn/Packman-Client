@@ -1,6 +1,7 @@
 package org.packman.client.socket;
 
 import lombok.RequiredArgsConstructor;
+import org.packman.client.exceptions.SocketException;
 import org.packman.client.services.DrawService;
 import org.packman.client.services.impl.DrawServiceImpl;
 import org.slf4j.Logger;
@@ -12,7 +13,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.net.SocketException;
 
 import static org.packman.client.utils.PropertiesUtil.*;
 
@@ -37,7 +37,7 @@ public class ClientSocket {
                 protected Void doInBackground() throws Exception {
                     while (!socket.isClosed()) {
                     }
-                    throw new SocketException();//todo ex
+                    throw new SocketException(500, "Error connection", System.currentTimeMillis());
                 }
             };
 
@@ -49,20 +49,20 @@ public class ClientSocket {
     }
 
     public static String sendCommand(String command, String username) {
-        System.out.println("Отправлена команда серверу: " + command + " " + username);
+        logger.info("Отправлена команда серверу: " + command + " " + username);
         out.println(command + " " + username);
         try {
             String response = in.readLine();
             System.out.println("Получен ответ от сервера: " + response);
             return response;
         } catch (IOException e) {
-            throw new RuntimeException();//todo add ex
+            throw new SocketException(500, "Error send command", System.currentTimeMillis());
         }
     }
 
     public static void quit() {
         try {
-            System.out.println("Закрыто соединение с сервером");
+            logger.info("Закрыто соединение с сервером");
             socket.close();
             in.close();
             out.close();
@@ -74,14 +74,14 @@ public class ClientSocket {
     }
 
     public static String sendCommand(String command) {
-        System.out.println("Отправлена команда серверу: " + command);
+        logger.info("Отправлена команда серверу: " + command);
         out.println(command);
         try {
             String response = in.readLine();
-            System.out.println("Получен ответ от сервера: " + response);
+            logger.info("Получен ответ от сервера: " + response);
             return response;
         } catch (IOException e) {
-            throw new RuntimeException();//todo add ex
+            throw new SocketException(500, "Error send command", System.currentTimeMillis());
         }
     }
 }
