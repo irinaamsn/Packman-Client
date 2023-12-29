@@ -149,10 +149,10 @@ class MapPanel extends JPanel {
 
     private static final Image wallImage = new ImageIcon("src/main/resources/img/wall.jpeg").getImage();
     private static final Image emptyImage = new ImageIcon("src/main/resources/img/empty.jpeg").getImage();
-    private static final Image playerImage = new ImageIcon("src/main/resources/img/packman.jpeg").getImage();
-    private static final Image weakCoinImage = new ImageIcon("src/main/resources/img/coin.png").getImage();
+    private static final Image playerImage = new ImageIcon("src/main/resources/img/packman.png").getImage();
+    private static final Image weakCoinImage = new ImageIcon("src/main/resources/img/pizza.png").getImage();
     private static final Image meddleCoinImage = new ImageIcon("src/main/resources/img/coin.png").getImage();
-    private static final Image strongCoinImage = new ImageIcon("src/main/resources/img/coin.png").getImage();
+    private static final Image strongCoinImage = new ImageIcon("src/main/resources/img/vege.png").getImage();
 
 
     public MapPanel(List<int[]> map) {
