@@ -31,7 +31,6 @@ public class DrawServiceImpl extends KeyAdapter implements DrawService {
     private final int TIME_GAME = getTimeGame();
 
     private WindowDraw draw;
-    private boolean isFinish=false;
     public DrawServiceImpl() {
         draw = new WindowDraw();
     }
@@ -71,7 +70,7 @@ public class DrawServiceImpl extends KeyAdapter implements DrawService {
             draw.updateGame(map, timeLeft, currentPoints);
         } else if (parseResponse[0].equals(UpdateMapAnswer.FINISH_GAME.name()))
             drawFinishPage(Integer.parseInt(parseResponse[1]), Integer.parseInt(parseResponse[2]));
-        else drawMenu();
+        else if (parseResponse[0].equals(UpdateMapAnswer.ERROR_GAME_NOT_EXISTS.name())) drawMenu();
     }
 
     @Override

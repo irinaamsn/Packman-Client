@@ -46,7 +46,7 @@ public class GamePage extends JFrame {
             isPlayBackgroundMusic = true;
         }
         isPageActive = true;
-
+        getContentPane().removeAll();
         setTitle("Пакмэн");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 666);

@@ -27,6 +27,7 @@ public class GameMenu extends JFrame {
     private JTextArea leaderboardArea;
 
     public void draw(List<AppUser> bestPlayers, Consumer<String> onClickStart, Runnable onClickExit) {
+        getContentPane().removeAll();
         setTitle("МЕНЮ");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 666);
@@ -41,7 +42,6 @@ public class GameMenu extends JFrame {
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.insets = new Insets(0, 55, 10, 90); // Устанавливаем минимальные отступы
-
 
         JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
         titlePanel.add(title);
