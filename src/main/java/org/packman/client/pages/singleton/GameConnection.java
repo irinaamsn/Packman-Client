@@ -1,5 +1,7 @@
 package org.packman.client.pages.singleton;
 
+import org.packman.client.exceptions.SocketException;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;

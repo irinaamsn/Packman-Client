@@ -39,7 +39,6 @@ public class GameMenu extends JFrame {
         gbc.gridy = 0;
         gbc.insets = new Insets(0, 55, 10, 90); // Устанавливаем минимальные отступы
 
-
         JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
         titlePanel.add(title);
         leftPanel.add(titlePanel, gbc);
