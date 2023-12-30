@@ -161,7 +161,6 @@ class MapPanel extends JPanel {
     private static final Image vegetablesImage = new ImageIcon("src/main/resources/img/vegetables.jpeg").getImage();
     private static final Image vegetablesWeakImage = new ImageIcon("src/main/resources/img/vegetables_weak.jpeg").getImage();
 
-
     public MapPanel(List<int[]> map) {
         this.map = map;
     }
@@ -192,31 +191,32 @@ class MapPanel extends JPanel {
                         image = wallImage;
                         break;
                     case 3:
-                        // Монета слабая
+                        // пицца
                         image = pizzaImage;
                         break;
                     case 4:
-                        // Монета слабая, скоро исчезнет
+                        // пица скоро исчезнет
                         image = pizzaWeakImage;
                         break;
                     case 5:
-                        // Монета средняя
+                        // бургер
                         image = burgerImage;
                         break;
                     case 6:
-                        // Монета средняя, скоро исчезнет
+                        // бургер скоро исчезнет
                         image = burgerWeakImage;
                         break;
                     case 7:
-                        // Монета сильная
+                        // овощи
                         image = vegetablesImage;
                         break;
                     case 8:
-                        // Монета сильная, скоро исчезнет
+                        // овощи скоро исчезнут
                         image = vegetablesWeakImage;
                         break;
                     default:
-                        // Другие случаи
+                        image = emptyImage;
+                        break;
                 }
 
                 if (image != null) {
